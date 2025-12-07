@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SnapDeploy Admin</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #0f172a;
+      --panel: #111827;
+      --accent: #22d3ee;
+      --accent-2: #a855f7;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #f87171;
+      --success: #34d399;
+      --border: #1f2937;
+      --shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at 15% 20%, rgba(168,85,247,0.1), transparent 30%), radial-gradient(circle at 85% 10%, rgba(34,211,238,0.12), transparent 26%), var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      padding: 28px 32px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .logo {
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo span {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      color: #0b1021;
+      font-weight: 800;
+      box-shadow: var(--shadow);
+    }
+    .app {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow);
+    }
+    h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+    }
+    p {
+      color: var(--muted);
+      margin: 0 0 10px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="file"],
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #0b1324;
+      color: var(--text);
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    input[type="file"] {
+      padding: 8px 10px;
+    }
+    select {
+      height: 40px;
+    }
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 11px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+    }
+    button.primary {
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      color: #0b1021;
+      box-shadow: 0 12px 40px rgba(34,211,238,0.35);
+    }
+    button.secondary {
+      background: #0b1324;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    button.danger {
+      background: #2a0c16;
+      color: #fca5a5;
+      border: 1px solid #7f1d1d;
+    }
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); opacity: 0.9; }
+    .row {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 16px;
+      align-items: start;
+      flex-wrap: wrap;
+    }
+    .hidden { display: none; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    th { color: #cbd5e1; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .status {
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #0b1324;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+    .status.good { color: var(--success); border-color: #14532d; }
+    .status.bad { color: var(--danger); border-color: #7f1d1d; }
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    @media (max-width: 900px) {
+      .row { grid-template-columns: 1fr; }
+      header { flex-direction: column; align-items: flex-start; }
+      button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><span>SD</span> SnapDeploy Admin</div>
+    <div id="auth-actions" class="toolbar"></div>
+  </header>
+  <div class="app">
+    <section id="login-section" class="card">
+      <h2>Login</h2>
+      <p>Enter the admin token to manage deployed static sites.</p>
+      <label for="token-input">Admin Token</label>
+      <input type="password" id="token-input" placeholder="Bearer token" autocomplete="off">
+      <button class="primary" id="login-btn">Save &amp; Continue</button>
+      <div id="login-status" class="status hidden"></div>
+    </section>
+
+    <section id="dashboard" class="hidden">
+      <div class="row">
+        <div class="card">
+          <h2>Deploy New Site</h2>
+          <p>Upload an <strong>index.html</strong> or a <strong>.zip</strong> with your static site.</p>
+          <form id="deploy-form">
+            <label for="host-input">Host (e.g. demo.example.com)</label>
+            <input id="host-input" name="host" type="text" required pattern="^[A-Za-z0-9.-]+$" placeholder="demo.example.com">
+
+            <label for="type-select">Content Type</label>
+            <select id="type-select" name="type">
+              <option value="single">Single file (index.html)</option>
+              <option value="zip">Zip archive</option>
+            </select>
+
+            <label for="file-input">Site File</label>
+            <input id="file-input" name="file" type="file" accept=".html,.zip,text/html" required>
+
+            <button class="primary" type="submit">Deploy</button>
+          </form>
+          <div id="deploy-status" class="status hidden"></div>
+        </div>
+
+        <div class="card">
+          <div class="toolbar" style="margin-bottom: 8px;">
+            <div>
+              <h2 style="margin:0;">Sites</h2>
+              <p style="margin:4px 0 0;">All deployed hosts under <code>/var/www/sites</code></p>
+            </div>
+            <button class="secondary" id="refresh-btn">Refresh</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Host</th>
+                <th>URL</th>
+                <th>Has index</th>
+                <th>Updated</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="sites-body"></tbody>
+          </table>
+          <div id="list-status" class="status hidden"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const tokenInput = document.getElementById('token-input');
+    const loginBtn = document.getElementById('login-btn');
+    const loginStatus = document.getElementById('login-status');
+    const loginSection = document.getElementById('login-section');
+    const dashboard = document.getElementById('dashboard');
+    const deployForm = document.getElementById('deploy-form');
+    const deployStatus = document.getElementById('deploy-status');
+    const sitesBody = document.getElementById('sites-body');
+    const listStatus = document.getElementById('list-status');
+    const refreshBtn = document.getElementById('refresh-btn');
+    const authActions = document.getElementById('auth-actions');
+    const typeSelect = document.getElementById('type-select');
+
+    function getToken() {
+      return localStorage.getItem('adminToken') || '';
+    }
+
+    function setToken(token) {
+      localStorage.setItem('adminToken', token);
+    }
+
+    function clearToken() {
+      localStorage.removeItem('adminToken');
+    }
+
+    function show(el) { el.classList.remove('hidden'); }
+    function hide(el) { el.classList.add('hidden'); }
+
+    function setStatus(el, msg, type = 'info') {
+      if (!msg) { hide(el); return; }
+      el.textContent = msg;
+      el.className = `status ${type === 'error' ? 'bad' : type === 'success' ? 'good' : ''}`;
+      show(el);
+    }
+
+    async function fetchWithAuth(url, options = {}) {
+      const headers = options.headers || {};
+      const token = getToken();
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+      return fetch(url, { ...options, headers });
+    }
+
+    async function verifyToken() {
+      try {
+        const res = await fetchWithAuth('/api/sites');
+        if (res.status === 401) return false;
+        return res.ok;
+      } catch {
+        return false;
+      }
+    }
+
+    function renderAuthActions() {
+      const token = getToken();
+      if (!token) {
+        authActions.innerHTML = '';
+        return;
+      }
+      authActions.innerHTML = '';
+      const tokenBadge = document.createElement('div');
+      tokenBadge.className = 'status';
+      tokenBadge.textContent = 'Token loaded';
+      authActions.appendChild(tokenBadge);
+
+      const logoutBtn = document.createElement('button');
+      logoutBtn.textContent = 'Logout';
+      logoutBtn.className = 'secondary';
+      logoutBtn.onclick = () => {
+        clearToken();
+        updateView();
+      };
+      authActions.appendChild(logoutBtn);
+    }
+
+    async function updateView() {
+      renderAuthActions();
+      const token = getToken();
+      if (!token) {
+        show(loginSection);
+        hide(dashboard);
+        return;
+      }
+      const ok = await verifyToken();
+      if (!ok) {
+        setStatus(loginStatus, 'Token rejected by API', 'error');
+        show(loginSection);
+        hide(dashboard);
+        return;
+      }
+      hide(loginSection);
+      show(dashboard);
+      loadSites();
+    }
+
+    loginBtn.addEventListener('click', async () => {
+      const token = tokenInput.value.trim();
+      if (!token) {
+        setStatus(loginStatus, 'Token is required', 'error');
+        return;
+      }
+      setToken(token);
+      setStatus(loginStatus, 'Saved. Verifying...', 'info');
+      await updateView();
+    });
+
+    refreshBtn.addEventListener('click', loadSites);
+
+    async function loadSites() {
+      setStatus(listStatus, 'Loading...');
+      sitesBody.innerHTML = '';
+      try {
+        const res = await fetchWithAuth('/api/sites');
+        if (res.status === 401) {
+          setStatus(listStatus, 'Unauthorized. Please log in again.', 'error');
+          clearToken();
+          updateView();
+          return;
+        }
+        if (!res.ok) throw new Error('Failed to load sites');
+        const data = await res.json();
+        const sites = data.sites || [];
+        if (!sites.length) {
+          sitesBody.innerHTML = '<tr><td colspan="5" style="color: var(--muted);">No sites yet</td></tr>';
+        } else {
+          sitesBody.innerHTML = '';
+          sites.forEach((site) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${site.host}</td>
+              <td>${site.url ? `<a href="${site.url}" target="_blank" style="color: var(--accent); text-decoration: none;">Open</a>` : '-'}</td>
+              <td>${site.hasIndex ? 'Yes' : 'No'}</td>
+              <td>${site.updatedAt ? new Date(site.updatedAt).toLocaleString() : '-'}</td>
+              <td style="text-align:right;">
+                <button class="danger" data-host="${site.host}">Delete</button>
+              </td>
+            `;
+            const btn = tr.querySelector('button');
+            btn.addEventListener('click', () => deleteSite(site.host));
+            sitesBody.appendChild(tr);
+          });
+        }
+        setStatus(listStatus, 'Updated', 'success');
+      } catch (err) {
+        console.error(err);
+        setStatus(listStatus, err.message || 'Failed to load sites', 'error');
+      }
+    }
+
+    async function deleteSite(host) {
+      if (!confirm(`Delete site "${host}"?`)) return;
+      setStatus(listStatus, `Deleting ${host}...`);
+      try {
+        const res = await fetchWithAuth('/api/sites/' + encodeURIComponent(host), { method: 'DELETE' });
+        if (!res.ok) throw new Error('Failed to delete');
+        setStatus(listStatus, `Deleted ${host}`, 'success');
+        loadSites();
+      } catch (err) {
+        setStatus(listStatus, err.message || 'Delete failed', 'error');
+      }
+    }
+
+    deployForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const host = document.getElementById('host-input').value.trim();
+      const file = document.getElementById('file-input').files[0];
+      const type = typeSelect.value;
+      if (!host || !file) {
+        setStatus(deployStatus, 'Host and file are required', 'error');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('host', host);
+      formData.append('type', type);
+      formData.append('file', file);
+
+      setStatus(deployStatus, 'Deploying...');
+      try {
+        const res = await fetchWithAuth('/api/sites', { method: 'POST', body: formData });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Deploy failed');
+        setStatus(deployStatus, `Deployed ${host}${data.url ? ' → ' + data.url : ''}`, 'success');
+        deployForm.reset();
+        typeSelect.value = 'single';
+        loadSites();
+      } catch (err) {
+        setStatus(deployStatus, err.message || 'Deploy failed', 'error');
+      }
+    });
+
+    updateView();
+  </script>
+</body>
+</html>

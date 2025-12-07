@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: sitepilot-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./sites:/var/www/sites
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+    networks:
+      - sitepilot-network
+
+  backend:
+    build: ./backend
+    container_name: sitepilot-backend
+    environment:
+      - PORT=3000
+      - ADMIN_TOKEN=${ADMIN_TOKEN:-admin123} # Default token for dev, should be overriden in .env
+    volumes:
+      - ./sites:/var/www/sites
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules # Avoid overwriting node_modules
+    networks:
+      - sitepilot-network
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    container_name: sitepilot-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sitepilot
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - sitepilot-network
+
+volumes:
+  mysql_data:
+
+networks:
+  sitepilot-network:
+    driver: bridge
