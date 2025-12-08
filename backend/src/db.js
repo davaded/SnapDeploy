@@ -53,6 +53,70 @@ const Site = sequelize.define('Site', {
     }
 });
 
+const User = sequelize.define('User', {
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
+    passwordHash: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+});
+
+const SiteAuthUser = sequelize.define('SiteAuthUser', {
+    host: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    passwordHash: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+}, {
+    indexes: [
+        { fields: ['host'] },
+        { unique: true, fields: ['host', 'username'] }
+    ]
+});
+
+// Global user pool for site-level auth with grants
+const GlobalAuthUser = sequelize.define('GlobalAuthUser', {
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
+    passwordHash: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+});
+
+const SiteAuthGrant = sequelize.define('SiteAuthGrant', {
+    host: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    userId: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false
+    }
+}, {
+    indexes: [
+        { fields: ['host'] },
+        { unique: true, fields: ['host', 'userId'] }
+    ]
+});
+
+SiteAuthGrant.belongsTo(GlobalAuthUser, { foreignKey: 'userId', onDelete: 'CASCADE' });
+GlobalAuthUser.hasMany(SiteAuthGrant, { foreignKey: 'userId' });
+
 // Implementation of sync logic
 const initDB = async () => {
     try {
@@ -77,4 +141,4 @@ const initDB = async () => {
     }
 };
 
-module.exports = { sequelize, Setting, Site, initDB };
+module.exports = { sequelize, Setting, Site, User, SiteAuthUser, GlobalAuthUser, SiteAuthGrant, initDB };

@@ -4,25 +4,35 @@
 
 @layer base {
   :root {
-    --background: 240 5% 96%;
-    /* #f5f5f7 - Apple Gray */
+    --background: 0 0% 93%;
+    /* base canvas */
     --surface: 0 0% 100%;
-    /* #ffffff */
-    --text-primary: 0 0% 10%;
-    /* #1a1a1a */
-    --text-secondary: 0 0% 40%;
-    /* #666666 */
-    --border: 0 0% 90%;
-    /* #e5e5e5 */
-    --accent: 220 90% 56%;
-    /* #3b82f6 - Soft Blue */
+    /* crisp cards */
+    --text-primary: 186 23% 26%;
+    /* #334f52 */
+    --text-secondary: 199 8% 52%;
+    /* #7b888e */
+    --border: 0 0% 85%;
+    /* soft separators */
+    --accent: 171 56% 48%;
+    /* #35bfab brand teal */
+    --accent-2: 189 81% 51%;
+    /* #1fc9e7 electric cyan */
   }
 
   body {
     @apply text-text-primary antialiased min-h-screen relative;
-    /* Warm Linear Gradient Strip: Cream -> Pink -> Peach -> Orange */
-    background: linear-gradient(90deg, #fdfbf0 0%, #f7e6e6 30%, #f6cbb7 70%, #edc6a8 100%);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    /* Neutral base with soft brand blooms */
+    background-color: #eeeeee;
+    background-image:
+      radial-gradient(circle 1100px at 12% 18%, rgba(53, 191, 171, 0.20), transparent 45%),
+      radial-gradient(circle 950px at 84% 12%, rgba(31, 201, 231, 0.18), transparent 46%),
+      radial-gradient(circle 1050px at 74% 78%, rgba(252, 200, 65, 0.16), transparent 48%),
+      radial-gradient(circle 1000px at 16% 82%, rgba(222, 67, 49, 0.12), transparent 52%);
     background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: 130% 130%;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02";
     color-scheme: light;
   }

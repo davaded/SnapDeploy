@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
-import { ExternalLink, Trash2, Clock, Activity } from 'lucide-react';
+import { ExternalLink, Trash2, Clock, Activity, Lock } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import axios from 'axios';
 
-export function SiteCard({ site, onDelete }) {
+export function SiteCard({ site, onDelete, onManageAccess }) {
     const [status, setStatus] = useState('checking'); // checking, online, offline
     const [lastCheck, setLastCheck] = useState(null);
 
@@ -61,6 +61,13 @@ export function SiteCard({ site, onDelete }) {
                     {/* Hover Actions Menu */}
                     <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <button
+                            onClick={() => onManageAccess && onManageAccess(site.host)}
+                            className="p-2 text-text-secondary hover:text-accent hover:bg-accent/10 rounded-lg transition-colors"
+                            title="Manage Access"
+                        >
+                            <Lock className="w-4 h-4" />
+                        </button>
+                        <button
                             onClick={() => onDelete(site.host)}
                             className="p-2 text-text-secondary hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                             title="Delete Deployment"
@@ -85,7 +92,7 @@ export function SiteCard({ site, onDelete }) {
                     href={`http://${site.host}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex w-full items-center justify-center space-x-2 bg-black text-white hover:bg-gray-800 font-medium py-2.5 rounded-xl transition-all duration-300 active:scale-95 shadow-sm hover:shadow-md"
+                    className="flex w-full items-center justify-center space-x-2 bg-gradient-to-r from-[#35bfab] to-[#1fc9e7] text-white font-medium py-2.5 rounded-xl transition-all duration-300 active:scale-95 shadow-[0_12px_30px_-12px_rgba(53,191,171,0.7)] hover:brightness-105"
                 >
                     <span>Visit Site</span>
                     <ExternalLink className="w-4 h-4" />

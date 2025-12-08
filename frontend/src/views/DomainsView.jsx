@@ -33,7 +33,7 @@ export function DomainsView({ baseDomain }) {
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
-                        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
+                        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#35bfab] to-[#1fc9e7]">
                             Domains
                         </h1>
                         <p className="text-lg text-text-secondary mt-2 max-w-lg">
@@ -42,7 +42,7 @@ export function DomainsView({ baseDomain }) {
                     </div>
                     <button
                         onClick={() => setIsSettingsOpen(true)}
-                        className="flex items-center space-x-2 bg-white text-black px-5 py-2.5 rounded-full font-medium hover:bg-gray-200 transition-all hover:scale-105 active:scale-95"
+                        className="flex items-center space-x-2 bg-gradient-to-r from-[#35bfab] to-[#1fc9e7] text-white px-5 py-2.5 rounded-full font-medium hover:brightness-105 transition-all hover:scale-105 active:scale-95 shadow-[0_12px_30px_-12px_rgba(53,191,171,0.7)]"
                     >
                         <Settings className="w-4 h-4" />
                         <span>Manage List</span>
@@ -52,7 +52,7 @@ export function DomainsView({ baseDomain }) {
                 {/* Content Grid */}
                 {loading ? (
                     <div className="flex justify-center py-20">
-                        <Loader2 className="w-8 h-8 animate-spin text-white/20" />
+                        <Loader2 className="w-8 h-8 animate-spin text-text-secondary" />
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -61,16 +61,16 @@ export function DomainsView({ baseDomain }) {
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="group relative overflow-hidden bg-surface/50 border border-white/5 rounded-3xl p-8 hover:bg-surface/80 transition-colors"
+                                className="group relative overflow-hidden bg-white/85 border border-border/60 rounded-3xl p-8 hover:shadow-lg hover:-translate-y-1 transition-all backdrop-blur-md shadow-soft"
                             >
-                                <div className="absolute top-0 right-0 p-32 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none group-hover:bg-blue-500/20 transition-all duration-700" />
+                                <div className="absolute top-0 right-0 p-32 bg-[#35bfab]/12 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none group-hover:bg-[#1fc9e7]/18 transition-all duration-700" />
 
                                 <div className="relative z-10">
-                                    <div className="w-12 h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center mb-6 text-blue-400">
+                                    <div className="w-12 h-12 rounded-2xl bg-[#35bfab]/15 flex items-center justify-center mb-6 text-[#1fc9e7]">
                                         <Globe className="w-6 h-6" />
                                     </div>
-                                    <h3 className="text-3xl font-bold tracking-tight mb-1">.{baseDomain}</h3>
-                                    <p className="text-sm text-blue-300 font-medium tracking-wide uppercase opacity-60">System Default</p>
+                                    <h3 className="text-3xl font-bold tracking-tight mb-1 text-text-primary">.{baseDomain}</h3>
+                                    <p className="text-sm text-[#1fc9e7] font-medium tracking-wide uppercase opacity-80">System Default</p>
                                 </div>
                             </motion.div>
                         )}
@@ -82,23 +82,23 @@ export function DomainsView({ baseDomain }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.1 }}
-                                className="group relative overflow-hidden bg-surface/50 border border-white/5 rounded-3xl p-8 hover:bg-surface/80 transition-colors"
+                                className="group relative overflow-hidden bg-white/85 border border-border/60 rounded-3xl p-8 hover:shadow-lg hover:-translate-y-1 transition-all backdrop-blur-md shadow-soft"
                             >
-                                <div className="absolute top-0 right-0 p-32 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none group-hover:bg-purple-500/20 transition-all duration-700" />
+                                <div className="absolute top-0 right-0 p-32 bg-[#fcc841]/18 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none group-hover:bg-[#fcc841]/28 transition-all duration-700" />
 
                                 <div className="relative z-10">
-                                    <div className="w-12 h-12 rounded-2xl bg-purple-500/20 flex items-center justify-center mb-6 text-purple-400">
+                                    <div className="w-12 h-12 rounded-2xl bg-[#fcc841]/20 flex items-center justify-center mb-6 text-[#d98200]">
                                         <Globe className="w-6 h-6" />
                                     </div>
-                                    <h3 className="text-3xl font-bold tracking-tight mb-1">.{domain}</h3>
-                                    <p className="text-sm text-purple-300 font-medium tracking-wide uppercase opacity-60">Custom Domain</p>
+                                    <h3 className="text-3xl font-bold tracking-tight mb-1 text-text-primary">.{domain}</h3>
+                                    <p className="text-sm text-[#d98200] font-medium tracking-wide uppercase opacity-80">Custom Domain</p>
                                 </div>
                             </motion.div>
                         ))}
 
                         {/* Empty State / Add CTA */}
                         {domains.length === 0 && !baseDomain && (
-                            <div className="col-span-full border border-dashed border-white/10 rounded-3xl p-12 text-center text-gray-500">
+                            <div className="col-span-full border border-dashed border-border rounded-3xl p-12 text-center text-text-secondary bg-white/70 backdrop-blur">
                                 <p>No domains configured. Use the settings to add one.</p>
                             </div>
                         )}

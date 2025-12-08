@@ -119,7 +119,7 @@ export function DeployModal({ isOpen, onClose, onDeploySuccess }) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
+                        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50"
                     />
                     <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
                         <motion.div
@@ -253,7 +253,7 @@ export function DeployModal({ isOpen, onClose, onDeploySuccess }) {
                                 <button
                                     onClick={deploy}
                                     disabled={isDeploying}
-                                    className="w-full bg-black text-white font-medium py-2.5 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center shadow-lg shadow-black/20"
+                                    className="w-full bg-gradient-to-r from-[#35bfab] to-[#1fc9e7] text-white font-medium py-2.5 rounded-lg hover:brightness-105 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center shadow-[0_12px_30px_-12px_rgba(53,191,171,0.7)]"
                                 >
                                     {isDeploying ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Deploy Project'}
                                 </button>

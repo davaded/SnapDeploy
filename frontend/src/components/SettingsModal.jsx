@@ -59,7 +59,7 @@ export function SettingsModal({ isOpen, onClose }) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+                        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50"
                     />
                     <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
                         <motion.div
@@ -81,7 +81,7 @@ export function SettingsModal({ isOpen, onClose }) {
                                 <div className="space-y-6">
                                     <div>
                                         <label className="block text-sm font-medium text-text-secondary mb-2">Allowed Base Domains</label>
-                                        <div className="flex space-x-2 mb-4">
+                                        <div className="flex gap-2 flex-col sm:flex-row mb-4">
                                             <input
                                                 type="text"
                                                 value={newDomain}
@@ -90,7 +90,7 @@ export function SettingsModal({ isOpen, onClose }) {
                                                 placeholder="e.g. sitepilot.io"
                                                 className="flex-1 bg-white border border-border rounded-lg px-3 py-2 text-text-primary placeholder-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all"
                                             />
-                                            <button onClick={addDomain} className="p-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors shadow-sm">
+                                            <button onClick={addDomain} className="p-2 bg-gradient-to-r from-[#35bfab] to-[#1fc9e7] text-white rounded-lg hover:brightness-105 transition-colors shadow-[0_10px_24px_-14px_rgba(53,191,171,0.7)]">
                                                 <Plus className="w-5 h-5" />
                                             </button>
                                         </div>
@@ -113,7 +113,7 @@ export function SettingsModal({ isOpen, onClose }) {
                                     <button
                                         onClick={save}
                                         disabled={isSaving}
-                                        className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 flex justify-center items-center space-x-2 shadow-lg shadow-black/20"
+                                        className="w-full bg-gradient-to-r from-[#35bfab] to-[#1fc9e7] text-white font-semibold py-2.5 rounded-lg hover:brightness-105 transition-colors disabled:opacity-50 flex justify-center items-center space-x-2 shadow-[0_12px_30px_-12px_rgba(53,191,171,0.7)]"
                                     >
                                         {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Save className="w-4 h-4" /><span>Save Changes</span></>}
                                     </button>

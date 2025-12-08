@@ -7,6 +7,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FloatingNav } from './components/FloatingNav';
 import { DomainsView } from './views/DomainsView';
 import { SettingsModal } from './components/SettingsModal';
+import { AccessModal } from './components/AccessModal';
+import { CommonUsersModal } from './components/CommonUsersModal';
 
 function App() {
     const [token, setToken] = useState(localStorage.getItem('admin_token') || '');
@@ -15,8 +17,11 @@ function App() {
     const [activeTab, setActiveTab] = useState('dashboard');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [isAccessOpen, setIsAccessOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [baseDomain, setBaseDomain] = useState(null);
+    const [accessHost, setAccessHost] = useState(null);
+    const [isCommonUsersOpen, setIsCommonUsersOpen] = useState(false);
 
     // Auth interceptor
     useEffect(() => {
@@ -82,14 +87,14 @@ function App() {
 
     if (!token) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-black">
-                <div className="w-full max-w-sm p-8">
+            <div className="min-h-screen flex items-center justify-center bg-background text-text-primary">
+                <div className="w-full max-w-sm p-8 bg-white/85 backdrop-blur-xl border border-border/80 rounded-2xl shadow-soft shadow-black/5">
                     <div className="text-center mb-8">
-                        <div className="h-12 w-12 bg-white rounded-full mx-auto mb-4 flex items-center justify-center">
-                            <Command className="h-6 w-6 text-black" />
+                        <div className="h-12 w-12 bg-gradient-to-br from-[#35bfab] to-[#1fc9e7] rounded-xl mx-auto mb-4 flex items-center justify-center shadow-md shadow-[#35bfab26]">
+                            <Command className="h-6 w-6 text-white" />
                         </div>
-                        <h1 className="text-2xl font-bold text-white mb-2">Welcome back</h1>
-                        <p className="text-gray-400">Enter your admin token to continue</p>
+                        <h1 className="text-2xl font-bold text-text-primary mb-2">Welcome back</h1>
+                        <p className="text-text-secondary">Enter your admin token to continue</p>
                     </div>
                     <input
                         type="password"
@@ -97,11 +102,11 @@ function App() {
                         value={inputToken}
                         onChange={(e) => setInputToken(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && login()}
-                        className="w-full bg-surface border border-border rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all mb-4"
+                        className="w-full bg-white border border-border rounded-lg px-4 py-3 text-text-primary placeholder-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-accent/25 focus:border-accent transition-all mb-4 shadow-sm"
                     />
                     <button
                         onClick={login}
-                        className="w-full bg-white text-black font-semibold py-3 rounded-lg hover:bg-gray-200 transition-colors"
+                        className="w-full bg-gradient-to-r from-[#35bfab] to-[#1fc9e7] text-white font-semibold py-3 rounded-lg hover:brightness-105 active:scale-95 transition-all shadow-[0_12px_30px_-12px_rgba(53,191,171,0.7)]"
                     >
                         Continue
                     </button>
@@ -111,16 +116,22 @@ function App() {
     }
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-screen text-text-primary">
             {/* Header - Minimal / Transparent */}
             <header className="fixed top-0 left-0 right-0 p-6 z-50 flex justify-between items-start pointer-events-none">
-                <div className="pointer-events-auto">
-                    <h1 className="text-xl font-bold tracking-tight text-white/90">SitePilot</h1>
+                <div className="pointer-events-auto bg-white/80 backdrop-blur-xl border border-border/70 rounded-full px-4 py-2 shadow-soft shadow-black/5">
+                    <h1 className="text-lg font-semibold tracking-tight text-text-primary">SitePilot</h1>
                 </div>
-                <div className="pointer-events-auto">
+                <div className="pointer-events-auto flex items-center space-x-2">
+                    <button
+                        onClick={() => setIsCommonUsersOpen(true)}
+                        className="text-xs font-medium text-text-primary bg-white/80 border border-border/70 hover:border-accent hover:text-accent px-3 py-1.5 rounded-full transition-all shadow-soft"
+                    >
+                        Common Users
+                    </button>
                     <button
                         onClick={logout}
-                        className="text-xs font-medium text-white/40 hover:text-white transition-colors bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:bg-white/10"
+                        className="text-xs font-medium text-text-primary bg-white/80 border border-border/70 hover:border-accent hover:text-accent px-3 py-1.5 rounded-full transition-all shadow-soft"
                     >
                         Sign Out
                     </button>
@@ -141,12 +152,12 @@ function App() {
                         >
                             <div className="flex justify-between items-center mb-8">
                                 <div>
-                                    <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">Overview</h2>
+                                    <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#35bfab] to-[#1fc9e7]">Overview</h2>
                                     <p className="text-lg text-text-secondary mt-2">Active Deployments</p>
                                 </div>
                                 <button
                                     onClick={() => setIsModalOpen(true)}
-                                    className="bg-white text-black px-5 py-2.5 rounded-full font-medium text-sm hover:bg-gray-200 transition-all hover:scale-105 active:scale-95 flex items-center shadow-lg shadow-white/10"
+                                    className="bg-gradient-to-r from-[#35bfab] to-[#1fc9e7] text-white px-5 py-2.5 rounded-full font-medium text-sm hover:brightness-105 transition-all hover:scale-105 active:scale-95 flex items-center shadow-[0_12px_30px_-12px_rgba(53,191,171,0.7)]"
                                 >
                                     <Plus className="w-4 h-4 mr-2" />
                                     New Project
@@ -154,20 +165,28 @@ function App() {
                             </div>
 
                             {loading && sites.length === 0 ? (
-                                <div className="text-center py-20 text-gray-500">Loading projects...</div>
+                                <div className="text-center py-20 text-text-secondary">Loading projects...</div>
                             ) : sites.length === 0 ? (
-                                <div className="border border-dashed border-border rounded-xl p-12 text-center" onClick={() => setIsModalOpen(true)}>
-                                    <div className="bg-surface inline-flex p-4 rounded-full mb-4">
-                                        <LayoutGrid className="w-6 h-6 text-gray-400" />
+                                <div className="border border-dashed border-border rounded-xl p-12 text-center bg-white/80 backdrop-blur-md shadow-soft hover:shadow-lg transition-shadow" onClick={() => setIsModalOpen(true)}>
+                                    <div className="bg-accent/10 inline-flex p-4 rounded-full mb-4">
+                                        <LayoutGrid className="w-6 h-6 text-accent" />
                                     </div>
-                                    <h3 className="text-lg font-medium text-white mb-2">No projects found</h3>
-                                    <p className="text-gray-400 mb-6">Deploy your first static site to get started.</p>
-                                    <button className="text-white underline hover:text-gray-300">Deploy now</button>
+                                    <h3 className="text-lg font-medium text-text-primary mb-2">No projects found</h3>
+                                    <p className="text-text-secondary mb-6">Deploy your first static site to get started.</p>
+                                    <button className="text-accent font-medium hover:text-accent/80">Deploy now</button>
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {sites.map(site => (
-                                        <SiteCard key={site.host} site={site} onDelete={deleteSite} />
+                                        <SiteCard
+                                            key={site.host}
+                                            site={site}
+                                            onDelete={deleteSite}
+                                            onManageAccess={(host) => {
+                                                setAccessHost(host);
+                                                setIsAccessOpen(true);
+                                            }}
+                                        />
                                     ))}
                                 </div>
                             )}
@@ -206,6 +225,16 @@ function App() {
                     setIsSettingsOpen(false);
                     fetchConfig(); // Refresh config after settings close
                 }}
+            />
+
+            <AccessModal
+                isOpen={isAccessOpen}
+                host={accessHost}
+                onClose={() => setIsAccessOpen(false)}
+            />
+            <CommonUsersModal
+                isOpen={isCommonUsersOpen}
+                onClose={() => setIsCommonUsersOpen(false)}
             />
         </div>
     )
