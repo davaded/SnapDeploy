@@ -15,19 +15,31 @@ services:
       - sitepilot-network
 
   backend:
-    build: ./backend
+    image: ${IMAGE_NAME:-sitepilot:latest}
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: sitepilot-backend
+    env_file:
+      - ./backend/.env
     environment:
+      - SITES_DIR=/var/www/sites
+      - DB_HOST=${DB_HOST:-host.docker.internal}
+      - DB_USER=${DB_USER:-root}
+      - DB_PASS=${DB_PASS:-root}
+      - DB_NAME=${DB_NAME:-sitepilot}
       - PORT=3000
-      - ADMIN_TOKEN=${ADMIN_TOKEN:-admin123} # Default token for dev, should be overriden in .env
+      - ADMIN_TOKEN=${ADMIN_TOKEN:-admin123}
+      - AUTH_ENABLED=${AUTH_ENABLED:-true}
+      - AUTH_SECRET=${AUTH_SECRET}
+      - SITE_AUTH_SECRET=${SITE_AUTH_SECRET}
+      - SITE_AUTH_COOKIE_SECURE=${SITE_AUTH_COOKIE_SECURE:-false}
+    ports:
+      - "3000:3000"
     volumes:
       - ./sites:/var/www/sites
-      - ./backend:/usr/src/app
-      - /usr/src/app/node_modules # Avoid overwriting node_modules
     networks:
       - sitepilot-network
-    depends_on:
-      - mysql
 
   mysql:
     image: mysql:8.0
