@@ -16,15 +16,18 @@ A modern, self-hosted static site deployment platform with a Vercel-like dashboa
 
 2) 部署到服务器（已安装 Docker / Compose）  
 ```bash
-# 使用 CI 推送的镜像标签
+# 使用 CI 推送的镜像标签（GHCR 公共包可直接拉取，无需登录）
 export IMAGE_NAME=ghcr.io/<your-account>/sitepilot:latest
 
-# 登录镜像仓库
-docker login ghcr.io -u <user> -p <token>
+# 指向宿主机已有 MySQL
+export DB_HOST=<宿主机MySQL地址或host.docker.internal>
+export DB_USER=<user>
+export DB_PASS=<pass>
+export DB_NAME=<db>
 
-# 拉取并启动（nginx + backend + mysql）
-docker compose pull backend
-docker compose up -d
+# 仅启动 backend（nginx/mysql 由宿主机提供）
+docker compose pull backend    # 可选，先拉镜像
+docker compose up -d backend
 ```
 
 3) 访问  
